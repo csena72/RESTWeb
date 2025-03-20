@@ -4,6 +4,9 @@
 ### ExpressionEngine ###
 .DS_Store
 
+# Postgres
+postgres/
+
 # Images
 images/avatars/
 images/captchas/
