@@ -28,7 +28,8 @@ export class TodosController {
     }
 
     public createTodo = async(req: Request, res: Response) => {
-        const { text } = req.body;        
+        const { text } = req.body;
+
         if ( !text ) res.status(400).json({ error: 'Text is required' });
 
         const todo = await prisma.todo.create({
@@ -41,7 +42,8 @@ export class TodosController {
     }
 
     public updateTodo = async (req: Request, res: Response) => {
-        const id = +req.params.id;        
+        const id = +req.params.id;
+
         if (isNaN(id)) res.status(400).json({ error: 'ID argument is not a number' });
 
         const todo = await prisma.todo.findFirst({
@@ -70,16 +72,17 @@ export class TodosController {
         if (isNaN(id)) res.status(400).json({ error: 'ID argument is not a number' });
 
         const todo = await prisma.todo.findFirst({
-            where: {
-                id: id
-            }
+            where: { id }
         });
 
         if (!todo){
             res.status(404).json({ error: `Todo ${id} not found` });
             return;
         }
-        await prisma.todo.delete({ where: { id: id } });
-        res.json(todo);
+
+        const todoDeleted = await prisma.todo.delete({ where: { id: id } });
+
+        (todoDeleted) ? res.json(todoDeleted) : res.status(500).json({ error: 'Error deleting todo' });
+
     }
 }
